@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Previsualización Tótem</title>
+    <style>
+        body {
+            margin: 0; background: #111;
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        .chasis {
+            position: relative;
+            height: 100vh; 
+            aspect-ratio: 410 / 800; 
+            background-image: url('totem.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .monitor {
+            position: absolute;
+            background: #000;
+            overflow: hidden;
+            border-radius: 2px;
+            
+            /* AJUSTE DE PANTALLA MÁS ANGOSTA Y ALTA */
+            top: 6%;     
+            left: 22%;     /* Centrado para un width de 58% */
+            width: 57%;    /* Reducido para que no sea tan ancha */
+            height: 47%; 
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body>
+    <div class="chasis">
+        <div class="monitor">
+            <iframe src="!DOCTYPE.html"></iframe>
+        </div>
+    </div>
+</body>
+</html>

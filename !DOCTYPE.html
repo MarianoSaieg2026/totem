@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Córdoba Wine Travel - Tótem Interactivo</title>
+    <style>
+        :root {
+            --wine-dark: #611224;
+            --wine-light: #8b1a33;
+            --gold: #d4af37;
+            --stone-light: #f5f5f0;
+            --stone-dark: #e2e2d9;
+            --ink: #1c1917;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: var(--font-main); background-color: var(--stone-light);
+            overflow: hidden; user-select: none; -webkit-user-select: none;
+            height: 100vh; width: 100vw; display: flex; flex-direction: column; color: var(--ink);
+        }
+
+        /* 1. BOTONERA SUPERIOR (15%) - AJUSTE MATEMÁTICO REDUCIDO A LA MITAD */
+        #top-section {
+            flex: 0 0 15%;
+            width: 100%;
+            background-color: var(--stone-dark); 
+            padding: 8px;
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-template-rows: repeat(2, 1fr);
+            gap: 6px; /* Espacio reducido para evitar desbordes */
+            z-index: 10; border-bottom: 2px solid var(--gold);
+        }
+
+        .btn-3d {
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, var(--wine-light), var(--wine-dark));
+            color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
+            /* El tamaño de letra se ajusta tanto al ancho como al alto del monitor */
+            font-size: min(2.5vw, 1.4vh); 
+            font-weight: 700; text-transform: uppercase;
+            cursor: pointer; outline: none; 
+            box-shadow: 0 2px 0 #3a0b16; /* Sombra más pequeña */
+            transition: all 0.1s ease; display: flex; align-items: center; justify-content: center;
+            text-align: center; padding: 2px; line-height: 1;
+        }
+
+        .btn-3d:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
+
+        /* MODO OFFLINE */
+        body.is-offline .btn-3d:not([data-action="idioma"]):not([data-action="home"]) {
+            opacity: 0.4; filter: grayscale(100%); pointer-events: none;
+        }
+
+        /* 2. SECCIÓN CENTRAL DINÁMICA (75%) - AMPLIADA */
+        #bottom-section {
+            flex: 0 0 75%;
+            width: 100%;
+            position: relative; background-color: #000; overflow: hidden;
+        }
+
+        /* BOTÓN INICIO REUBICADO EN LA ESQUINA SUPERIOR DERECHA */
+        #btn-home-corner {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: max-content;
+            height: max-content;
+            min-width: 80px;
+            min-height: 35px;
+            padding: 8px 16px;
+            z-index: 100;
+            border-radius: 12px;
+        }
+
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1; display: flex; flex-direction: column; }
+        .layer.active { opacity: 1; pointer-events: auto; z-index: 5; }
+        
+        #video-layer video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* GRID INTERNO DE BODEGAS/HOTELES */
+        #content-layer { background-color: var(--stone-light); padding: 8px; }
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .btn-back { background-color: var(--ink); color: white; border: none; padding: 4px 10px; font-size: min(2vw, 1.2vh); border-radius: 12px; font-weight: bold; }
+        .grid-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; overflow-y: auto; }
+        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 6px 2px; text-align: center; font-size: min(2.5vw, 1.3vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); min-height: 45px; display: flex; flex-direction: column; justify-content: center; }
+
+        /* ESCALADO DE LINKS EXTERNOS */
+        #iframe-layer { background: #fff; overflow: hidden; }
+        .iframe-wrapper {
+            width: 250%; 
+            height: 250%; 
+            transform: scale(0.4); 
+            transform-origin: top left;
+        }
+        #main-iframe { width: 100%; height: 100%; border: none; }
+
+        /* 3. PUBLICIDAD (7.5%) - REDUCIDA A LA MITAD */
+        #ad-section { flex: 0 0 7.5%; width: 100%; background-color: var(--stone-dark); position: relative; overflow: hidden; border-top: 1px solid var(--gold); }
+        .ad-slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
+        .ad-slide.active { opacity: 1; z-index: 2; }
+
+        /* 4. FOOTER (2.5%) - REDUCIDO A LA MITAD */
+        #footer { flex: 0 0 2.5%; width: 100%; background: white; display: flex; align-items: center; justify-content: center; border-top: 1px solid #ddd; }
+        #footer a { color: #78716c; font-size: min(1.8vw, 1vh); text-decoration: none; font-weight: bold; }
+
+        #start-overlay { position: absolute; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; color: white; text-align: center; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="start-overlay"><h5>Tocar para iniciar</h5></div>
+
+    <header id="top-section">
+        <button class="btn-3d" data-action="idioma">Idioma</button>
+        <button class="btn-3d" data-action="bodegas">Bodegas</button>
+        <button class="btn-3d" data-action="restaurantes">Restaurantes</button>
+        <button class="btn-3d" data-action="hoteles">Hoteles</button>
+        <button class="btn-3d" data-action="otros">Otros</button>
+        <button class="btn-3d" data-action="tours">Wine Tours</button>
+        <button class="btn-3d" data-action="mapa">Mapa</button>
+        <button class="btn-3d" data-action="contacto">Contacto</button>
+    </header>
+
+    <main id="bottom-section">
+        <button class="btn-3d" id="btn-home-corner" data-action="home">Inicio</button>
+
+        <div id="video-layer" class="layer active">
+            <video id="bg-video" autoplay muted loop playsinline></video>
+        </div>
+
+        <div id="content-layer" class="layer">
+            <div class="content-header">
+                <button class="btn-back" onclick="app.showHome()">← Volver</button>
+            </div>
+            <div id="grid-container" class="grid-container"></div>
+        </div>
+
+        <div id="iframe-layer" class="layer">
+            <button class="btn-back" style="position:absolute; top:8px; left:8px; z-index:100; border: 1px solid white;" onclick="app.goBackFromIframe()">← Volver</button>
+            <div class="iframe-wrapper">
+                <iframe id="main-iframe" src="about:blank"></iframe>
+            </div>
+        </div>
+    </main>
+
+    <section id="ad-section"></section>
+
+    <footer id="footer">
+        <a href="#">Powered by Córdoba Wine Travel</a>
+    </footer>
+
+    <script>
+        const CONFIG = {
+            videos: ['TraslasierraWineFest.mp4'],
+            publicidad: [
+                { imagen: "https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=500&q=80", url: "https://cordobawinetravel.com.ar" },
+                { imagen: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=500&q=80", url: "https://winebooking.com.ar" }
+            ],
+            datos: {
+                bodegas: [
+                    { nombre: "La Caroyense", region: "Caroya", url: "https://winebooking.com.ar" },
+                    { nombre: "Terra Camiare", region: "Caroya", url: "https://winebooking.com.ar" },
+                    { nombre: "Vista Grande", region: "Calamuchita", url: "https://winebooking.com.ar" },
+                    { nombre: "Aráoz de Lamadrid", region: "Traslasierra", url: "https://winebooking.com.ar" }
+                ],
+                restaurantes: [ { nombre: "El Papagayo", region: "Capital", url: "https://winebooking.com.ar" } ],
+                hoteles: [ { nombre: "Azur Real", region: "Capital", url: "https://winebooking.com.ar" } ],
+                otros: [ { nombre: "Tienda Wine", region: "Online", url: "https://winebooking.com.ar" } ]
+            }
+        };
+
+        const app = {
+            init: function() {
+                this.cacheDOM();
+                this.bindEvents();
+                this.initAds();
+                this.initNetworkMonitor();
+                this.videoEl.src = CONFIG.videos[0];
+            },
+            cacheDOM: function() {
+                this.videoEl = document.getElementById('bg-video');
+                this.gridContainer = document.getElementById('grid-container');
+                this.iframe = document.getElementById('main-iframe');
+            },
+            bindEvents: function() {
+                document.querySelectorAll('.btn-3d').forEach(btn => {
+                    btn.addEventListener('click', () => this.handleMenu(btn.getAttribute('data-action')));
+                });
+                document.getElementById('start-overlay').addEventListener('click', (e) => {
+                    e.currentTarget.style.display = 'none';
+                    this.videoEl.play();
+                });
+            },
+            initNetworkMonitor: function() {
+                const check = () => {
+                    if (navigator.onLine) document.body.classList.remove('is-offline');
+                    else { document.body.classList.add('is-offline'); this.showHome(); }
+                };
+                window.addEventListener('online', check);
+                window.addEventListener('offline', check);
+                check();
+            },
+            handleMenu: function(action) {
+                if (!navigator.onLine && action !== 'idioma' && action !== 'home') return;
+                if (CONFIG.datos[action]) this.showCategory(action);
+                else if (action === 'home') this.showHome();
+                else this.openIframe("https://cordobawinetravel.com.ar");
+            },
+            showHome: function() {
+                document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+                document.getElementById('video-layer').classList.add('active');
+                this.videoEl.play();
+            },
+            showCategory: function(cat) {
+                this.renderGrid(CONFIG.datos[cat]);
+                document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+                document.getElementById('content-layer').classList.add('active');
+            },
+            renderGrid: function(items) {
+                this.gridContainer.innerHTML = items.map(item => `
+                    <div class="grid-item" onclick="app.openIframe('${item.url}')">
+                        ${item.nombre}
+                        <small>${item.region}</small>
+                    </div>
+                `).join('');
+            },
+            openIframe: function(url) {
+                this.iframe.src = url;
+                document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+                document.getElementById('iframe-layer').classList.add('active');
+            },
+            goBackFromIframe: function() {
+                this.iframe.src = "about:blank";
+                this.showHome();
+            },
+            initAds: function() {
+                const container = document.getElementById('ad-section');
+                CONFIG.publicidad.forEach((ad, i) => {
+                    const img = document.createElement('img');
+                    img.src = ad.imagen;
+                    img.className = 'ad-slide' + (i === 0 ? ' active' : '');
+                    container.appendChild(img);
+                });
+                let idx = 0;
+                setInterval(() => {
+                    const slides = document.querySelectorAll('.ad-slide');
+                    if(slides.length > 1) {
+                        slides[idx].classList.remove('active');
+                        idx = (idx + 1) % slides.length;
+                        slides[idx].classList.add('active');
+                    }
+                }, 5000);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>
