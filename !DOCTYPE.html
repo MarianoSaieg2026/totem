@@ -50,29 +50,11 @@
 
         .btn-3d:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
 
-        /* MODO OFFLINE */
-        body.is-offline .btn-3d:not([data-action="home"]) {
-            opacity: 0.4; filter: grayscale(100%); pointer-events: none;
-        }
-
-        /* 2. SECCIÓN CENTRAL DINÁMICA (75%) */
+        /* SECCIÓN CENTRAL (75%) */
         #bottom-section {
             flex: 0 0 75%;
             width: 100%;
             position: relative; background-color: #000; overflow: hidden;
-        }
-
-        #btn-home-corner {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: max-content;
-            height: max-content;
-            min-width: 50px;
-            min-height: 25px;
-            padding: 8px 16px;
-            z-index: 100;
-            border-radius: 12px;
         }
 
         .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 1; display: flex; flex-direction: column; }
@@ -80,33 +62,26 @@
         
         #video-layer video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* GRID INTERNO Y FILTROS */
+        /* GRID Y FILTROS */
         #content-layer { background-color: var(--stone-light); padding: 8px; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .btn-back { background-color: var(--ink); color: white; border: none; padding: 6px 12px; font-size: min(2.2vw, 1.3vh); border-radius: 12px; font-weight: bold; }
+        .btn-back { background-color: var(--ink); color: white; border: none; padding: 8px 15px; font-size: min(2.5vw, 1.5vh); border-radius: 12px; font-weight: bold; cursor: pointer; }
         
         .filter-bar { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 8px; width: 100%; }
-        .btn-filter { background-color: var(--stone-dark); color: var(--wine-dark); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 8px; font-size: min(2vw, 1.2vh); font-weight: bold; white-space: nowrap; }
+        .btn-filter { background-color: var(--stone-dark); color: var(--wine-dark); border: 1px solid var(--gold); padding: 6px 12px; border-radius: 8px; font-size: min(2vw, 1.2vh); font-weight: bold; white-space: nowrap; }
 
         .grid-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; overflow-y: auto; align-content: start; }
-        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 10px 4px; text-align: center; font-size: min(2.5vw, 1.4vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 45px; }
+        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 10px 4px; text-align: center; font-size: min(2.5vw, 1.4vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 55px; }
 
-        /* IFRAME */
-        #iframe-layer { background: #fff; overflow: hidden; }
-        .iframe-wrapper {
-            width: 250%; 
-            height: 250%; 
-            transform: scale(0.4); 
-            transform-origin: top left;
-        }
+        /* IFRAME: PANTALLA COMPLETA CON SCROLL */
+        #iframe-layer { background: #fff; }
         #main-iframe { width: 100%; height: 100%; border: none; }
 
-        /* 3. PUBLICIDAD (7.5%) */
+        /* PUBLICIDAD (7.5%) */
         #ad-section { flex: 0 0 7.5%; width: 100%; background-color: var(--stone-dark); position: relative; overflow: hidden; border-top: 1px solid var(--gold); }
         .ad-slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
         .ad-slide.active { opacity: 1; z-index: 2; }
 
-        /* 4. FOOTER (2.5%) */
         #footer { flex: 0 0 2.5%; width: 100%; background: white; display: flex; align-items: center; justify-content: center; border-top: 1px solid #ddd; }
         #footer a { color: #78716c; font-size: min(1.8vw, 1vh); text-decoration: none; font-weight: bold; }
 
@@ -115,43 +90,41 @@
 </head>
 <body>
 
-    <div id="start-overlay"><h5>Tocar para iniciar</h5></div>
+    <div id="start-overlay"><h3>Tocar para iniciar</h3></div>
 
     <header id="top-section">
         <div style="display: flex; gap: 2px;">
-            <button class="btn-3d" style="font-size: 10px;" onclick="alert('Español')">ES</button>
-            <button class="btn-3d" style="font-size: 10px;" onclick="alert('Português')">PT</button>
-            <button class="btn-3d" style="font-size: 10px;" onclick="alert('English')">EN</button>
+            <button class="btn-3d" style="font-size: 10px;" onclick="app.changeLanguage('es')">ES</button>
+            <button class="btn-3d" style="font-size: 10px;" onclick="app.changeLanguage('pt')">PT</button>
+            <button class="btn-3d" style="font-size: 10px;" onclick="app.changeLanguage('en')">EN</button>
         </div>
-        <button class="btn-3d" data-action="bodegas">Bodegas</button>
-        <button class="btn-3d" data-action="restaurantes">Restaurantes</button>
-        <button class="btn-3d" data-action="hoteles">Hoteles</button>
-        <button class="btn-3d" data-action="otros">Otros</button>
-        <button class="btn-3d" data-action="tours">Wine Tours</button>
-        <button class="btn-3d" data-action="mapa">Mapa</button>
-        <button class="btn-3d" data-action="contacto">Consultá y Reservá</button>
+        <button class="btn-3d" data-action="bodegas" id="btn-bodegas">Bodegas</button>
+        <button class="btn-3d" data-action="restaurantes" id="btn-restaurantes">Restaurantes</button>
+        <button class="btn-3d" data-action="hoteles" id="btn-hoteles">Hoteles</button>
+        <button class="btn-3d" data-action="otros" id="btn-otros">Otros</button>
+        <button class="btn-3d" data-action="tours" id="btn-tours">Wine Tours</button>
+        <button class="btn-3d" data-action="mapa" id="btn-mapa">Mapa</button>
+        <button class="btn-3d" data-action="contacto" id="btn-contacto">Consultá y Reservá</button>
     </header>
 
     <main id="bottom-section">
-        <button class="btn-3d" id="btn-home-corner" data-action="home">Inicio</button>
+        <button class="btn-3d" id="btn-home-corner" style="position:absolute; top:8px; right:8px; z-index:100; width:70px; height:30px;" onclick="app.showHome()">Inicio</button>
 
         <div id="video-layer" class="layer active">
             <video id="bg-video" autoplay muted loop playsinline></video>
         </div>
 
         <div id="content-layer" class="layer">
-            <div class="content-header">
-                <button class="btn-back" onclick="app.showHome()">← Volver</button>
+            <div class="content-header" style="padding: 10px;">
+                <button class="btn-back" onclick="app.showHome()" id="btn-back">← Volver</button>
             </div>
-            <div id="filter-bar" class="filter-bar"></div>
-            <div id="grid-container" class="grid-container"></div>
+            <div id="filter-bar" class="filter-bar" style="padding: 0 10px;"></div>
+            <div id="grid-container" class="grid-container" style="padding: 10px;"></div>
         </div>
 
         <div id="iframe-layer" class="layer">
-            <button class="btn-back" style="position:absolute; top:8px; left:8px; z-index:100; border: 1px solid white;" onclick="app.goBackFromIframe()">← Volver</button>
-            <div class="iframe-wrapper">
-                <iframe id="main-iframe" src="about:blank"></iframe>
-            </div>
+            <button class="btn-back" style="position:absolute; top:8px; left:8px; z-index:100; border: 2px solid var(--wine-dark);" onclick="app.goBackFromIframe()" id="btn-back-iframe">← Volver</button>
+            <iframe id="main-iframe" src="about:blank"></iframe>
         </div>
     </main>
 
@@ -162,6 +135,12 @@
     </footer>
 
     <script>
+        const TRANSLATIONS = {
+            es: { bodegas: "Bodegas", restaurantes: "Restaurantes", hoteles: "Hoteles", otros: "Otros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consultá y Reservá", volver: "← Volver", inicio: "Inicio" },
+            pt: { bodegas: "Vinícolas", restaurantes: "Restaurantes", hoteles: "Hotéis", otros: "Outros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consulte e Reserve", volver: "← Voltar", inicio: "Início" },
+            en: { bodegas: "Wineries", restaurantes: "Restaurants", hoteles: "Hotels", otros: "Others", tours: "Wine Tours", mapa: "Map", contacto: "Inquire & Book", volver: "← Back", inicio: "Home" }
+        };
+
         const CONFIG = {
             videos: ['TraslasierraWineFest.mp4'],
             publicidad: [
@@ -188,18 +167,14 @@
                 restaurantes: [ 
                     { nombre: "El Papagayo", region: "Capital", url: "https://www.elpapagayo.com.ar/" },
                     { nombre: "Sibaris", region: "Capital", url: "https://sibarisrestaurante.com.ar/" },
-                    { nombre: "San Honorato", region: "Capital", url: "https://sanhonorato.com.ar/" },
-                    { nombre: "Ayres", region: "Calamuchita", url: "https://www.ayresdelchampaqui.com.ar/gastronomia.php" }
+                    { nombre: "Madre", region: "Calamuchita", url: "https://www.instagram.com/madrerestaurante/" }
                 ],
                 hoteles: [ 
                     { nombre: "Azur Real", region: "Capital", url: "https://azurrealhotel.com/hotel/" },
-                    { nombre: "Amerian", region: "Capital", url: "https://www.amerian.com/destinos/amerian-cordoba-park-hotel/" },
-                    { nombre: "Windsor", region: "Capital", url: "https://www.windsortower.com/" },
-                    { nombre: "NH Urbano", region: "Capital", url: "https://www.minorhotels.com/en/destinations/argentina/cordoba/nh-cordoba-urbano" }
+                    { nombre: "Windsor", region: "Capital", url: "https://www.windsortower.com/" }
                 ],
                 otros: [ 
-                    { nombre: "Vino Cba La feria", region: "Capital", url: "https://www.cordobawinetravel.com.ar/" },
-                    { nombre: "Premium Wines", region: "Capital", url: "https://premiumwines.com.ar/" }
+                    { nombre: "Vino Cba La feria", region: "Capital", url: "https://www.instagram.com/vinocordobalaferia/" }
                 ]
             }
         };
@@ -210,7 +185,6 @@
                 this.cacheDOM();
                 this.bindEvents();
                 this.initAds();
-                this.initNetworkMonitor();
                 this.videoEl.src = CONFIG.videos[0];
             },
             cacheDOM: function() {
@@ -220,83 +194,65 @@
                 this.iframe = document.getElementById('main-iframe');
             },
             bindEvents: function() {
-                document.querySelectorAll('.btn-3d').forEach(btn => {
-                    const action = btn.getAttribute('data-action');
-                    if(action) {
-                        btn.addEventListener('click', () => this.handleMenu(action));
-                    }
+                document.querySelectorAll('.btn-3d[data-action]').forEach(btn => {
+                    btn.addEventListener('click', () => this.handleMenu(btn.getAttribute('data-action')));
                 });
                 document.getElementById('start-overlay').addEventListener('click', (e) => {
                     e.currentTarget.style.display = 'none';
                     this.videoEl.play();
                 });
             },
-            initNetworkMonitor: function() {
-                const check = () => {
-                    if (navigator.onLine) document.body.classList.remove('is-offline');
-                    else { document.body.classList.add('is-offline'); this.showHome(); }
-                };
-                window.addEventListener('online', check);
-                window.addEventListener('offline', check);
-                check();
+            changeLanguage: function(lang) {
+                const t = TRANSLATIONS[lang];
+                document.getElementById('btn-bodegas').innerText = t.bodegas;
+                document.getElementById('btn-restaurantes').innerText = t.restaurantes;
+                document.getElementById('btn-hoteles').innerText = t.hoteles;
+                document.getElementById('btn-otros').innerText = t.otros;
+                document.getElementById('btn-tours').innerText = t.tours;
+                document.getElementById('btn-mapa').innerText = t.mapa;
+                document.getElementById('btn-contacto').innerText = t.contacto;
+                document.getElementById('btn-home-corner').innerText = t.inicio;
+                document.getElementById('btn-back').innerText = t.volver;
+                document.getElementById('btn-back-iframe').innerText = t.volver;
             },
             handleMenu: function(action) {
-                if (!navigator.onLine && action !== 'home') return;
-                
                 if (CONFIG.datos[action]) {
                     this.showCategory(action);
-                } else if (action === 'home') {
-                    this.showHome();
                 } else if (action === 'tours') {
                     this.openIframe("https://cordobawinetravel.com.ar/");
-                } else if (action === 'consulta y reserva') {
+                } else if (action === 'contacto') {
                     this.openIframe("https://cordobawinetravel.com.ar/arma-tu-experiencia/");
                 } else if (action === 'mapa') {
                     this.openIframe("https://maps.app.goo.gl/5KrKjuMXAKhtXVFg9");
-                } else {
-                    this.openIframe("https://cordobawinetravel.com.ar");
                 }
             },
             showHome: function() {
                 document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
                 document.getElementById('video-layer').classList.add('active');
-                this.videoEl.play();
             },
             showCategory: function(cat) {
                 this.currentCategory = cat;
                 const items = CONFIG.datos[cat];
                 const regiones = [...new Set(items.map(i => i.region))];
-                
                 this.renderFilters(regiones);
                 this.renderGrid(items);
-                
                 document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
                 document.getElementById('content-layer').classList.add('active');
             },
             renderFilters: function(regiones) {
-                this.filterBar.innerHTML = `
-                    <button class="btn-filter" style="background:var(--gold); color:white" onclick="app.filterByRegion('Todas')">Todas</button>
-                    ${regiones.map(r => `<button class="btn-filter" onclick="app.filterByRegion('${r}')">${r}</button>`).join('')}
-                `;
+                this.filterBar.innerHTML = `<button class="btn-filter" style="background:var(--gold); color:white" onclick="app.filterByRegion('Todas')">Todas</button>` + 
+                    regiones.map(r => `<button class="btn-filter" onclick="app.filterByRegion('${r}')">${r}</button>`).join('');
             },
             renderGrid: function(items) {
                 this.gridContainer.innerHTML = items.map(item => `
                     <div class="grid-item" onclick="app.openIframe('${item.url}')">
-                        ${item.nombre}
-                        <small style="font-size:10px; color:#666">${item.region}</small>
-                    </div>
-                `).join('');
+                        ${item.nombre} <small style="font-size:10px; color:#666">${item.region}</small>
+                    </div>`).join('');
             },
             filterByRegion: function(region) {
                 const allItems = CONFIG.datos[this.currentCategory];
                 const filtered = region === 'Todas' ? allItems : allItems.filter(i => i.region === region);
                 this.renderGrid(filtered);
-                
-                // Resaltar botón activo
-                document.querySelectorAll('.btn-filter').forEach(btn => {
-                    btn.style.background = btn.innerText === region ? 'var(--gold)' : 'var(--stone-dark)';
-                    btn.style.color = btn.innerText === region ? 'white' : 'var(--wine-dark)';
-                });
             },
             openIframe: function(url) {
                 this.iframe.src = url;
@@ -326,7 +282,6 @@
                 }, 5000);
             }
         };
-
         document.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 </body>
