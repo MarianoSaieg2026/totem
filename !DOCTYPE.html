@@ -87,7 +87,7 @@
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .btn-back { background-color: var(--ink); color: white; border: none; padding: 4px 10px; font-size: min(2vw, 1.2vh); border-radius: 12px; font-weight: bold; }
         .grid-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; overflow-y: auto; }
-        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 6px 2px; text-align: center; font-size: min(2.5vw, 1.3vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); min-height: 45px; display: flex; flex-direction: column; justify-content: center; }
+        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 6px 2px; text-align: center; font-size: min(2.5vw, 1.3vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); min-height: 25px; display: flex; flex-direction: column; justify-content: center; }
 
         /* ESCALADO DE LINKS EXTERNOS */
         #iframe-layer { background: #fff; overflow: hidden; }
@@ -158,7 +158,7 @@
         const CONFIG = {
             videos: ['TraslasierraWineFest.mp4'],
             publicidad: [
-                { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer1-totem.png", url: "https://cordobawinetravel.com.ar" },
+                { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer1-totem.png", url: "https://cordobaturismo.gov.ar/" },
  { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer2-totem.png", url: "https://www.instagram.com/vinocordobalaferia/" },
                 { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer3-totem.png", url: "https://winebooking.com.ar" }
             ],
@@ -233,9 +233,25 @@
             },
             handleMenu: function(action) {
                 if (!navigator.onLine && action !== 'idioma' && action !== 'home') return;
-                if (CONFIG.datos[action]) this.showCategory(action);
-                else if (action === 'home') this.showHome();
-                else this.openIframe("https://cordobawinetravel.com.ar");
+                
+                if (CONFIG.datos[action]) {
+                    // Si la acción tiene datos (bodegas, restaurantes, etc.), muestra la cuadrícula
+                    this.showCategory(action);
+                } else if (action === 'home') {
+                    this.showHome();
+                } else if (action === 'tours') {
+                    // Wine Tours va a la home principal
+                    this.openIframe("https://cordobawinetravel.com.ar/");
+                } else if (action === 'contacto') {
+                    // Contacto va a "Armá tu experiencia"
+                    this.openIframe("https://cordobawinetravel.com.ar/arma-tu-experiencia/");
+                } else if (action === 'mapa') {
+                    // Mapa va a la URL de Google Maps proporcionada
+                    this.openIframe("https://maps.app.goo.gl/5KrKjuMXAKhtXVFg9");
+                } else {
+                    // Cualquier otra acción por defecto
+                    this.openIframe("https://cordobawinetravel.com.ar");
+                }
             },
             showHome: function() {
                 document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
