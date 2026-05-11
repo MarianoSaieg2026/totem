@@ -23,7 +23,7 @@
             height: 100vh; width: 100vw; display: flex; flex-direction: column; color: var(--ink);
         }
 
-        /* 1. BOTONERA SUPERIOR (15%) - AJUSTE MATEMÁTICO REDUCIDO A LA MITAD */
+        /* 1. BOTONERA SUPERIOR (15%) */
         #top-section {
             flex: 0 0 15%;
             width: 100%;
@@ -32,7 +32,7 @@
             display: grid; 
             grid-template-columns: repeat(4, 1fr); 
             grid-template-rows: repeat(2, 1fr);
-            gap: 6px; /* Espacio reducido para evitar desbordes */
+            gap: 6px;
             z-index: 10; border-bottom: 2px solid var(--gold);
         }
 
@@ -40,30 +40,28 @@
             width: 100%; height: 100%;
             background: linear-gradient(to bottom, var(--wine-light), var(--wine-dark));
             color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
-            /* El tamaño de letra se ajusta tanto al ancho como al alto del monitor */
-            font-size: min(2.5vw, 1.4vh); 
+            font-size: min(2.2vw, 1.3vh); 
             font-weight: 700; text-transform: uppercase;
             cursor: pointer; outline: none; 
-            box-shadow: 0 2px 0 #3a0b16; /* Sombra más pequeña */
+            box-shadow: 0 2px 0 #3a0b16;
             transition: all 0.1s ease; display: flex; align-items: center; justify-content: center;
-            text-align: center; padding: 2px; line-height: 1;
+            text-align: center; padding: 2px; line-height: 1.1;
         }
 
         .btn-3d:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.5); }
 
         /* MODO OFFLINE */
-        body.is-offline .btn-3d:not([data-action="idioma"]):not([data-action="home"]) {
+        body.is-offline .btn-3d:not([data-action="home"]) {
             opacity: 0.4; filter: grayscale(100%); pointer-events: none;
         }
 
-        /* 2. SECCIÓN CENTRAL DINÁMICA (75%) - AMPLIADA */
+        /* 2. SECCIÓN CENTRAL DINÁMICA (75%) */
         #bottom-section {
             flex: 0 0 75%;
             width: 100%;
             position: relative; background-color: #000; overflow: hidden;
         }
 
-        /* BOTÓN INICIO REUBICADO EN LA ESQUINA SUPERIOR DERECHA */
         #btn-home-corner {
             position: absolute;
             top: 8px;
@@ -82,14 +80,18 @@
         
         #video-layer video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* GRID INTERNO DE BODEGAS/HOTELES */
+        /* GRID INTERNO Y FILTROS */
         #content-layer { background-color: var(--stone-light); padding: 8px; }
         .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .btn-back { background-color: var(--ink); color: white; border: none; padding: 4px 10px; font-size: min(2vw, 1.2vh); border-radius: 12px; font-weight: bold; }
-        .grid-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; overflow-y: auto; }
-        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 6px 2px; text-align: center; font-size: min(2.5vw, 1.3vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); min-height: 25px; display: flex; flex-direction: column; justify-content: center; }
+        .btn-back { background-color: var(--ink); color: white; border: none; padding: 6px 12px; font-size: min(2.2vw, 1.3vh); border-radius: 12px; font-weight: bold; }
+        
+        .filter-bar { display: flex; gap: 4px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 8px; width: 100%; }
+        .btn-filter { background-color: var(--stone-dark); color: var(--wine-dark); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 8px; font-size: min(2vw, 1.2vh); font-weight: bold; white-space: nowrap; }
 
-        /* ESCALADO DE LINKS EXTERNOS */
+        .grid-container { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; overflow-y: auto; align-content: start; }
+        .grid-item { background: white; border: 1px solid var(--stone-dark); border-radius: 4px; padding: 10px 4px; text-align: center; font-size: min(2.5vw, 1.4vh); font-weight: bold; color: var(--wine-dark); box-shadow: 0 1px 2px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; min-height: 45px; }
+
+        /* IFRAME */
         #iframe-layer { background: #fff; overflow: hidden; }
         .iframe-wrapper {
             width: 250%; 
@@ -99,12 +101,12 @@
         }
         #main-iframe { width: 100%; height: 100%; border: none; }
 
-        /* 3. PUBLICIDAD (7.5%) - REDUCIDA A LA MITAD */
+        /* 3. PUBLICIDAD (7.5%) */
         #ad-section { flex: 0 0 7.5%; width: 100%; background-color: var(--stone-dark); position: relative; overflow: hidden; border-top: 1px solid var(--gold); }
         .ad-slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
         .ad-slide.active { opacity: 1; z-index: 2; }
 
-        /* 4. FOOTER (2.5%) - REDUCIDO A LA MITAD */
+        /* 4. FOOTER (2.5%) */
         #footer { flex: 0 0 2.5%; width: 100%; background: white; display: flex; align-items: center; justify-content: center; border-top: 1px solid #ddd; }
         #footer a { color: #78716c; font-size: min(1.8vw, 1vh); text-decoration: none; font-weight: bold; }
 
@@ -116,14 +118,18 @@
     <div id="start-overlay"><h5>Tocar para iniciar</h5></div>
 
     <header id="top-section">
-        <button class="btn-3d" data-action="idioma">Idioma</button>
+        <div style="display: flex; gap: 2px;">
+            <button class="btn-3d" style="font-size: 10px;" onclick="alert('Español')">ES</button>
+            <button class="btn-3d" style="font-size: 10px;" onclick="alert('Português')">PT</button>
+            <button class="btn-3d" style="font-size: 10px;" onclick="alert('English')">EN</button>
+        </div>
         <button class="btn-3d" data-action="bodegas">Bodegas</button>
         <button class="btn-3d" data-action="restaurantes">Restaurantes</button>
         <button class="btn-3d" data-action="hoteles">Hoteles</button>
         <button class="btn-3d" data-action="otros">Otros</button>
         <button class="btn-3d" data-action="tours">Wine Tours</button>
         <button class="btn-3d" data-action="mapa">Mapa</button>
-        <button class="btn-3d" data-action="Contacta y Reserva">Contactá y Reservá</button>
+        <button class="btn-3d" data-action="contacto">Consultá y Reservá</button>
     </header>
 
     <main id="bottom-section">
@@ -137,6 +143,7 @@
             <div class="content-header">
                 <button class="btn-back" onclick="app.showHome()">← Volver</button>
             </div>
+            <div id="filter-bar" class="filter-bar"></div>
             <div id="grid-container" class="grid-container"></div>
         </div>
 
@@ -159,7 +166,7 @@
             videos: ['TraslasierraWineFest.mp4'],
             publicidad: [
                 { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer1-totem.png", url: "https://cordobaturismo.gov.ar/" },
- { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer2-totem.png", url: "https://www.instagram.com/vinocordobalaferia/" },
+                { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer2-totem.png", url: "https://www.instagram.com/vinocordobalaferia/" },
                 { imagen: "https://cordobawinetravel.com.ar/wp-content/uploads/2026/05/footer3-totem.png", url: "https://winebooking.com.ar" }
             ],
             datos: {
@@ -167,40 +174,39 @@
                     { nombre: "La Caroyense", region: "Caroya", url: "https://winebooking.com.ar/bodega-la-caroyense/" },
                     { nombre: "Terra Camiare", region: "Caroya", url: "https://winebooking.com.ar/bodega-terra-camiare/" },
                     { nombre: "Vista Grande", region: "Calamuchita", url: "https://winebooking.com.ar/finca-vista-grande/" },
-{ nombre: "Alma Minera", region: "Calamuchita", url: "https://winebooking.com.ar/bodega-alma-minera/" },
- { nombre: "Sineres Espumantes", region: "Calamuchita", url: "https://winebooking.com.ar/fabrica-de-espumantes-sineres/" },
-{ nombre: "Aráoz de Lamadrid", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-araoz-de-lamadrid/" },
-{ nombre: "La Matilde", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-la-matilde/" },
-{ nombre: "San Javier", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-san-javier/" },
-{ nombre: "Kirton", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-kirton/" },
-{ nombre: "Sierra y Monte", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-sierra-y-monte/" },
- { nombre: "La Marta", region: "Punilla", url: "https://winebooking.com.ar/finca-la-marta/" },
-{ nombre: "Robledo Balzarini", region: "Noroeste", url: "https://winebooking.com.ar/finca-robledo-balzarini/" },
- { nombre: "Del Gredal", region: "Norte", url: "https://winebooking.com.ar/bodega-del-gredal/" },
-                    { nombre: "Aráoz de Lamadrid", region: "Traslasierra", url: "https://winebooking.com.ar" }
+                    { nombre: "Alma Minera", region: "Calamuchita", url: "https://winebooking.com.ar/bodega-alma-minera/" },
+                    { nombre: "Sineres Espumantes", region: "Calamuchita", url: "https://winebooking.com.ar/fabrica-de-espumantes-sineres/" },
+                    { nombre: "Aráoz de Lamadrid", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-araoz-de-lamadrid/" },
+                    { nombre: "La Matilde", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-la-matilde/" },
+                    { nombre: "San Javier", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-san-javier/" },
+                    { nombre: "Kirton", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-kirton/" },
+                    { nombre: "Sierra y Monte", region: "Traslasierra", url: "https://winebooking.com.ar/bodega-sierra-y-monte/" },
+                    { nombre: "La Marta", region: "Punilla", url: "https://winebooking.com.ar/finca-la-marta/" },
+                    { nombre: "Robledo Balzarini", region: "Noroeste", url: "https://winebooking.com.ar/finca-robledo-balzarini/" },
+                    { nombre: "Del Gredal", region: "Norte", url: "https://winebooking.com.ar/bodega-del-gredal/" }
                 ],
-                restaurantes: [ { nombre: "El Papagayo", region: "Capital", url: "https://www.elpapagayo.com.ar/" },
-{ nombre: "Sibaris", region: "Capital", url: "https://sibarisrestaurante.com.ar/" },
-{ nombre: "República", region: "Capital", url: "https://mirepublica.mitiendanube.com/password/" },
-{ nombre: "República", region: "Traslasierra", url: "https://www.instagram.com/explore/locations/582254558650076/" },
-{ nombre: "Madre", region: "Calamuchita", url: "https://www.instagram.com/madrerestaurante/" },
-
- ],
-                hoteles: [ { nombre: "Azur Real", region: "Capital", url: "https://azurrealhotel.com/hotel/" },
-{ nombre: "Amerian", region: "Capital", url: "https://www.amerian.com/destinos/amerian-cordoba-park-hotel/?utm_source=GoogleMaps&utm_medium=MyBusiness" },
-{ nombre: "Windsor", region: "Capital", url: "https://www.windsortower.com/" },
-{ nombre: "NH Urbano", region: "Capital", url: "https://www.minorhotels.com/en/destinations/argentina/cordoba/nh-cordoba-urbano?campid=8435708&utm_campaign=nh_hotel&utm_source=google&utm_medium=cpc&utm_id=16575947994&utm_source_platform=sa360&gclsrc=aw.ds&gad_source=1&gad_campaignid=16575947994&gbraid=0AAAAAD5GqPCQ4J0UqprukJWHUq2tnKF5i&gclid=Cj0KCQjw2YDQBhD_ARIsAE1qeSfIyeKlCb7zikefBYPH9Sojqq1FljxmhJUHhg4yu8YHORRLb1sGCX8aAqv0EALw_wcB" },
-
-
-
- ],
-                otros: [ { nombre: "Vino Cba La feria", region: "Capital", url: "https://www.instagram.com/vinocordobalaferia/" },
-{ nombre: "Premium Wines", region: "Capital", url: "https://premiumwines.com.ar/" },
- ]
+                restaurantes: [ 
+                    { nombre: "El Papagayo", region: "Capital", url: "https://www.elpapagayo.com.ar/" },
+                    { nombre: "Sibaris", region: "Capital", url: "https://sibarisrestaurante.com.ar/" },
+                    { nombre: "República", region: "Capital", url: "https://mirepublica.mitiendanube.com/password/" },
+                    { nombre: "República", region: "Traslasierra", url: "https://www.instagram.com/explore/locations/582254558650076/" },
+                    { nombre: "Madre", region: "Calamuchita", url: "https://www.instagram.com/madrerestaurante/" }
+                ],
+                hoteles: [ 
+                    { nombre: "Azur Real", region: "Capital", url: "https://azurrealhotel.com/hotel/" },
+                    { nombre: "Amerian", region: "Capital", url: "https://www.amerian.com/destinos/amerian-cordoba-park-hotel/" },
+                    { nombre: "Windsor", region: "Capital", url: "https://www.windsortower.com/" },
+                    { nombre: "NH Urbano", region: "Capital", url: "https://www.minorhotels.com/en/destinations/argentina/cordoba/nh-cordoba-urbano" }
+                ],
+                otros: [ 
+                    { nombre: "Vino Cba La feria", region: "Capital", url: "https://www.instagram.com/vinocordobalaferia/" },
+                    { nombre: "Premium Wines", region: "Capital", url: "https://premiumwines.com.ar/" }
+                ]
             }
         };
 
         const app = {
+            currentCategory: null,
             init: function() {
                 this.cacheDOM();
                 this.bindEvents();
@@ -211,11 +217,15 @@
             cacheDOM: function() {
                 this.videoEl = document.getElementById('bg-video');
                 this.gridContainer = document.getElementById('grid-container');
+                this.filterBar = document.getElementById('filter-bar');
                 this.iframe = document.getElementById('main-iframe');
             },
             bindEvents: function() {
                 document.querySelectorAll('.btn-3d').forEach(btn => {
-                    btn.addEventListener('click', () => this.handleMenu(btn.getAttribute('data-action')));
+                    const action = btn.getAttribute('data-action');
+                    if(action) {
+                        btn.addEventListener('click', () => this.handleMenu(action));
+                    }
                 });
                 document.getElementById('start-overlay').addEventListener('click', (e) => {
                     e.currentTarget.style.display = 'none';
@@ -232,24 +242,19 @@
                 check();
             },
             handleMenu: function(action) {
-                if (!navigator.onLine && action !== 'idioma' && action !== 'home') return;
+                if (!navigator.onLine && action !== 'home') return;
                 
                 if (CONFIG.datos[action]) {
-                    // Si la acción tiene datos (bodegas, restaurantes, etc.), muestra la cuadrícula
                     this.showCategory(action);
                 } else if (action === 'home') {
                     this.showHome();
                 } else if (action === 'tours') {
-                    // Wine Tours va a la home principal
                     this.openIframe("https://cordobawinetravel.com.ar/");
-                } else if (action === 'Contactá y Reservá') {
-                    // Contacto va a "Armá tu experiencia"
+                } else if (action === 'contacto') {
                     this.openIframe("https://cordobawinetravel.com.ar/arma-tu-experiencia/");
                 } else if (action === 'mapa') {
-                    // Mapa va a la URL de Google Maps proporcionada
                     this.openIframe("https://maps.app.goo.gl/5KrKjuMXAKhtXVFg9");
                 } else {
-                    // Cualquier otra acción por defecto
                     this.openIframe("https://cordobawinetravel.com.ar");
                 }
             },
@@ -259,17 +264,40 @@
                 this.videoEl.play();
             },
             showCategory: function(cat) {
-                this.renderGrid(CONFIG.datos[cat]);
+                this.currentCategory = cat;
+                const items = CONFIG.datos[cat];
+                const regiones = [...new Set(items.map(i => i.region))];
+                
+                this.renderFilters(regiones);
+                this.renderGrid(items);
+                
                 document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
                 document.getElementById('content-layer').classList.add('active');
+            },
+            renderFilters: function(regiones) {
+                this.filterBar.innerHTML = `
+                    <button class="btn-filter" style="background:var(--gold); color:white" onclick="app.filterByRegion('Todas')">Todas</button>
+                    ${regiones.map(r => `<button class="btn-filter" onclick="app.filterByRegion('${r}')">${r}</button>`).join('')}
+                `;
             },
             renderGrid: function(items) {
                 this.gridContainer.innerHTML = items.map(item => `
                     <div class="grid-item" onclick="app.openIframe('${item.url}')">
                         ${item.nombre}
-                        <small>${item.region}</small>
+                        <small style="font-size:10px; color:#666">${item.region}</small>
                     </div>
                 `).join('');
+            },
+            filterByRegion: function(region) {
+                const allItems = CONFIG.datos[this.currentCategory];
+                const filtered = region === 'Todas' ? allItems : allItems.filter(i => i.region === region);
+                this.renderGrid(filtered);
+                
+                // Resaltar botón activo
+                document.querySelectorAll('.btn-filter').forEach(btn => {
+                    btn.style.background = btn.innerText === region ? 'var(--gold)' : 'var(--stone-dark)';
+                    btn.style.color = btn.innerText === region ? 'white' : 'var(--wine-dark)';
+                });
             },
             openIframe: function(url) {
                 this.iframe.src = url;
