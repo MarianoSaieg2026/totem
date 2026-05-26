@@ -18,7 +18,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: var(--font-main); background-color: var(--stone-light);
+            font-family: var(--font-main);
+            background-color: var(--stone-light);
             overflow: hidden; user-select: none; -webkit-user-select: none;
             height: 100vh; width: 100vw; display: flex; flex-direction: column; color: var(--ink);
         }
@@ -33,18 +34,22 @@
             grid-template-columns: repeat(4, 1fr); 
             grid-template-rows: repeat(2, 1fr);
             gap: 6px;
-            z-index: 10; border-bottom: 2px solid var(--gold);
+            z-index: 10;
+            border-bottom: 2px solid var(--gold);
         }
 
         .btn-3d {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(to bottom, var(--wine-light), var(--wine-dark));
             color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px;
             font-size: min(2.2vw, 1.3vh); 
-            font-weight: 700; text-transform: uppercase;
+            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer; outline: none; 
             box-shadow: 0 2px 0 #3a0b16;
-            transition: all 0.1s ease; display: flex; align-items: center; justify-content: center;
+            transition: all 0.1s ease; display: flex; align-items: center;
+            justify-content: center;
             text-align: center; padding: 2px; line-height: 1.1;
         }
 
@@ -77,6 +82,34 @@
         #iframe-layer { background: #fff; }
         #main-iframe { width: 100%; height: 100%; border: none; }
 
+        /* ===== NUEVOS ESTILOS PARA LA CAPA DEL QR ===== */
+        #qr-layer {
+            background: #fff;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .escaneame-titulo {
+            font-size: 22px; font-weight: 800; color: #9c183f; margin: 0 0 15px 0;
+            text-transform: uppercase; letter-spacing: 1.5px;
+        }
+        .winet-dinamic-text-box {
+            margin-bottom: 20px; padding: 0 20px; line-height: 1.4; color: #333333; 
+            font-size: 18px; font-weight: 600; text-shadow: 1px 1px 1px rgba(0,0,0,0.08);
+            max-width: 600px;
+        }
+        .qr-wrapper-box {
+            width: 190px; height: 190px; background: #ffffff; border: 2px solid #9c183f;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px auto; box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            overflow: hidden; padding: 10px;
+        }
+        .qr-wrapper-box img {
+            width: 100%; height: 100%; object-fit: contain; margin: 0; padding: 0;
+        }
+
         /* PUBLICIDAD (7.5%) */
         #ad-section { flex: 0 0 7.5%; width: 100%; background-color: var(--stone-dark); position: relative; overflow: hidden; border-top: 1px solid var(--gold); }
         .ad-slide { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
@@ -108,6 +141,7 @@
     </header>
 
     <main id="bottom-section">
+   
         <button class="btn-3d" id="btn-home-corner" style="position:absolute; top:8px; right:8px; z-index:100; width:70px; height:30px;" onclick="app.showHome()">Inicio</button>
 
         <div id="video-layer" class="layer active">
@@ -126,6 +160,20 @@
             <button class="btn-back" style="position:absolute; top:8px; left:8px; z-index:100; border: 2px solid var(--wine-dark);" onclick="app.goBackFromIframe()" id="btn-back-iframe">← Volver</button>
             <iframe id="main-iframe" src="about:blank"></iframe>
         </div>
+
+        <div id="qr-layer" class="layer">
+            <button class="btn-back" style="position:absolute; top:8px; left:8px; z-index:100; border: 2px solid var(--wine-dark);" onclick="app.goBackFromQR()" id="btn-back-qr">← Volver</button>
+            
+            <h2 class="escaneame-titulo" id="qr-titulo">Escaneame</h2>
+            
+            <div id="qr-leyenda" class="winet-dinamic-text-box">
+                Y hacé una pre-reserva de la visita para saber el valor, disponibilidad, y contactarnos
+            </div>
+
+            <div class="qr-wrapper-box">
+                <img src="https://winebooking.com.ar/wp-content/uploads/2026/05/WINET-QR-Arma-tu-experiencia-CWT.png" alt="Código QR">
+            </div>
+        </div>
     </main>
 
     <section id="ad-section"></section>
@@ -136,9 +184,18 @@
 
     <script>
         const TRANSLATIONS = {
-            es: { bodegas: "Bodegas", restaurantes: "Restaurantes", hoteles: "Hoteles", otros: "Otros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consultá y Reservá", volver: "← Volver", inicio: "Inicio" },
-            pt: { bodegas: "Vinícolas", restaurantes: "Restaurantes", hoteles: "Hotéis", otros: "Outros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consulte e Reserve", volver: "← Voltar", inicio: "Início" },
-            en: { bodegas: "Wineries", restaurantes: "Restaurants", hoteles: "Hotels", otros: "Others", tours: "Wine Tours", mapa: "Map", contacto: "Inquire & Book", volver: "← Back", inicio: "Home" }
+            es: { 
+                bodegas: "Bodegas", restaurantes: "Restaurantes", hoteles: "Hoteles", otros: "Otros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consultá y Reservá", volver: "← Volver", inicio: "Inicio",
+                qr_titulo: "Escaneame", qr_leyenda: "Y hacé una pre-reserva de la visita para saber el valor, disponibilidad, y contactarnos"
+            },
+            pt: { 
+                bodegas: "Vinícolas", restaurantes: "Restaurantes", hoteles: "Hotéis", otros: "Outros", tours: "Wine Tours", mapa: "Mapa", contacto: "Consulte e Reserve", volver: "← Voltar", inicio: "Início",
+                qr_titulo: "Escaneie-me", qr_leyenda: "E faça uma pré-reserva da visita para saber o valor, disponibilidade e nos contatar."
+            },
+            en: { 
+                bodegas: "Wineries", restaurantes: "Restaurants", hoteles: "Hotels", otros: "Others", tours: "Wine Tours", mapa: "Map", contacto: "Inquire & Book", volver: "← Back", inicio: "Home",
+                qr_titulo: "Scan me", qr_leyenda: "And make a pre-booking for the visit to check pricing, availability, and contact us."
+            }
         };
 
         const CONFIG = {
@@ -218,6 +275,11 @@
                 document.getElementById('btn-home-corner').innerText = t.inicio;
                 document.getElementById('btn-back').innerText = t.volver;
                 document.getElementById('btn-back-iframe').innerText = t.volver;
+                
+                // Traducción de la nueva vista del QR
+                document.getElementById('btn-back-qr').innerText = t.volver;
+                document.getElementById('qr-titulo').innerText = t.qr_titulo;
+                document.getElementById('qr-leyenda').innerText = t.qr_leyenda;
             },
             handleMenu: function(action) {
                 if (CONFIG.datos[action]) {
@@ -225,7 +287,8 @@
                 } else if (action === 'tours') {
                     this.openIframe("https://cordobawinetravel.com.ar/");
                 } else if (action === 'contacto') {
-                    this.openIframe("https://cordobawinetravel.com.ar/arma-tu-experiencia/");
+                    // Ahora redirige a la vista del QR en lugar del iframe
+                    this.showQR();
                 } else if (action === 'mapa') {
                     this.openIframe("https://drive.google.com/file/d/1BruJY7IRWIZ4onM0sVVy1-mopibTd6Hb/view?usp=drive_link");
                 }
@@ -270,6 +333,14 @@
             },
             goBackFromIframe: function() {
                 this.iframe.src = "about:blank";
+                this.showHome();
+            },
+            // METODOS NUEVOS PARA MANEJAR LA VISTA QR
+            showQR: function() {
+                document.querySelectorAll('.layer').forEach(l => l.classList.remove('active'));
+                document.getElementById('qr-layer').classList.add('active');
+            },
+            goBackFromQR: function() {
                 this.showHome();
             },
             initAds: function() {
